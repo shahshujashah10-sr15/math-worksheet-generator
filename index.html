@@ -14,19 +14,9 @@
         button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin-right: 10px; }
         button.print-btn { background-color: #007BFF; color: white; border: none; }
 
-        /* --- NEW: Style for the Logo --- */
-        .logo-container { 
-            text-align: center; 
-            margin-bottom: 10px; 
-        }
-        .logo-container img { 
-            max-width: 150px; /* Limits the size so it's not huge */
-            height: auto; 
-        }
-
         @media print {
             .controls { display: none; } 
-            h2 { text-align: center; margin-top: 0; }   
+            h2 { text-align: center; }   
             body { padding: 0; }
         }
     </style>
@@ -54,12 +44,8 @@
         <button class="print-btn" onclick="window.print()">Print PDF</button>
     </div>
 
-    <div class="logo-container">
-        <img src="logo.png" alt="Worksheet Logo">
-    </div>
-
     <h2 id="sheet-title">Math Worksheet</h2>
-    <p style="text-align: center;">Name: __________________________ &nbsp;&nbsp; Date: ______________</p>
+    <p>Name: __________________________ &nbsp;&nbsp; Date: ______________</p>
     <ul id="worksheet-container"></ul>
 
     <script>
@@ -67,29 +53,36 @@
             let container = document.getElementById("worksheet-container");
             container.innerHTML = ""; 
 
+            // Get values from both dropdowns
             let diffLevel = document.getElementById("difficulty").value;
             let opType = document.getElementById("operation").value;
 
+            // 1. Determine the Max Number
             let maxNumber = 10; 
             if (diffLevel === "medium") maxNumber = 50;
             if (diffLevel === "hard") maxNumber = 100;
 
+            // 2. Update the Title of the page
             let titleText = "Math Worksheet";
             if(opType === "add") titleText = "Addition Practice";
             if(opType === "subtract") titleText = "Subtraction Practice";
             if(opType === "multiply") titleText = "Multiplication Practice";
             document.getElementById("sheet-title").innerText = titleText;
 
+            // 3. The Loop
             for (let i = 0; i < 10; i++) {
                 let num1 = Math.ceil(Math.random() * maxNumber);
                 let num2 = Math.ceil(Math.random() * maxNumber);
                 let symbol = "+";
 
+                // 4. Handle Operations
                 if (opType === "add") {
                     symbol = "+";
                 } 
                 else if (opType === "subtract") {
                     symbol = "-";
+                    // SWAP LOGIC: If num1 is smaller than num2, swap them
+                    // This prevents negative answers (e.g., 3 - 9)
                     if (num1 < num2) {
                         let temp = num1;
                         num1 = num2;
@@ -98,6 +91,7 @@
                 } 
                 else if (opType === "multiply") {
                     symbol = "x";
+                    // Make multiplication slightly easier for 'Medium' so it's not too crazy
                     if (diffLevel === "medium") num2 = Math.ceil(Math.random() * 12); 
                 }
 
