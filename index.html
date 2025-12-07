@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Math Worksheet</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 40px; }
+        
+        ul { list-style-type: none; padding: 0; }
+        li { font-size: 24px; margin-bottom: 30px; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
+
+        .controls { margin-bottom: 30px; padding: 20px; background-color: #f0f0f0; border-radius: 8px; }
+        
+        select { padding: 10px; font-size: 16px; margin-right: 10px; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin-right: 10px; }
+        button.print-btn { background-color: #007BFF; color: white; border: none; }
+
+        @media print {
+            .controls { display: none; } 
+            h2 { text-align: center; }   
+            body { padding: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="controls">
+        <h2>Math Worksheet Generator</h2>
+        
+        <label>Difficulty:</label>
+        <select id="difficulty">
+            <option value="easy">Easy (1-10)</option>
+            <option value="medium">Medium (1-50)</option>
+            <option value="hard">Hard (1-100)</option>
+        </select>
+
+        <label>Operation:</label>
+        <select id="operation">
+            <option value="add">Addition (+)</option>
+            <option value="subtract">Subtraction (-)</option>
+            <option value="multiply">Multiplication (x)</option>
+        </select>
+
+        <button onclick="generateWorksheet()">Generate</button>
+        <button class="print-btn" onclick="window.print()">Print PDF</button>
+    </div>
+
+    <h2 id="sheet-title">Math Worksheet</h2>
+    <p>Name: __________________________ &nbsp;&nbsp; Date: ______________</p>
+    <ul id="worksheet-container"></ul>
+
+    <script>
+        function generateWorksheet() {
+            let container = document.getElementById("worksheet-container");
+            container.innerHTML = ""; 
+
+            // Get values from both dropdowns
+            let diffLevel = document.getElementById("difficulty").value;
+            let opType = document.getElementById("operation").value;
+
+            // 1. Determine the Max Number
+            let maxNumber = 10; 
+            if (diffLevel === "medium") maxNumber = 50;
+            if (diffLevel === "hard") maxNumber = 100;
+
+            // 2. Update the Title of the page
+            let titleText = "Math Worksheet";
+            if(opType === "add") titleText = "Addition Practice";
+            if(opType === "subtract") titleText = "Subtraction Practice";
+            if(opType === "multiply") titleText = "Multiplication Practice";
+            document.getElementById("sheet-title").innerText = titleText;
+
+            // 3. The Loop
+            for (let i = 0; i < 10; i++) {
+                let num1 = Math.ceil(Math.random() * maxNumber);
+                let num2 = Math.ceil(Math.random() * maxNumber);
+                let symbol = "+";
+
+                // 4. Handle Operations
+                if (opType === "add") {
+                    symbol = "+";
+                } 
+                else if (opType === "subtract") {
+                    symbol = "-";
+                    // SWAP LOGIC: If num1 is smaller than num2, swap them
+                    // This prevents negative answers (e.g., 3 - 9)
+                    if (num1 < num2) {
+                        let temp = num1;
+                        num1 = num2;
+                        num2 = temp;
+                    }
+                } 
+                else if (opType === "multiply") {
+                    symbol = "x";
+                    // Make multiplication slightly easier for 'Medium' so it's not too crazy
+                    if (diffLevel === "medium") num2 = Math.ceil(Math.random() * 12); 
+                }
+
+                let question = (i + 1) + ")  " + num1 + " " + symbol + " " + num2 + " = ______";
+
+                let listItem = document.createElement("li");
+                listItem.innerText = question;
+                container.appendChild(listItem);
+            }
+        }
+
+        generateWorksheet();
+    </script>
+
+</body>
+</html>
